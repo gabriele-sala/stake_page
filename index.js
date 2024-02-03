@@ -369,7 +369,16 @@ const contractAbi = [
   }
 ];
 
-const contract = new ethers.Contract(contractAddress, contractAbi, provider);
+const provider = new ethers.providers.EtherscanProvider(
+  'mainnet', 
+  process.env.ETHERSCAN_API_KEY
+);
+
+const contract = new ethers.Contract(
+  contractAddress,
+  contractAbi, 
+  provider  
+);
 
 exports.handler = async function(event) {
 
