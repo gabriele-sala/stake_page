@@ -4,7 +4,7 @@ async function calculateAPR() {
     const data = await response.json();
 
     if (data.apr) {
-      document.getElementById('aprResult').textContent = data.apr.toFixed(2);
+      document.getElementById('aprResult').textContent = data.apr.toFixed(2) + '%';
     } else {
       displayError(data.error || 'Failed to calculate APR'); 
     }
@@ -17,5 +17,5 @@ function displayError(message) {
   document.getElementById('error-message').textContent = message;
 }
 
-calculateAPR(); // Call on page load 
+calculateAPR(); // Call on page load
 
