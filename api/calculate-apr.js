@@ -1,5 +1,6 @@
 const Web3 = require('web3');
-const alchemyApiKey = 'https://eth-mainnet.g.alchemy.com/v2/cdHgNpLVB-LMgKyXNu7SokVnkhMQrvr4'; // Replace with YOUR Alchemy API key
+const BigNumber = require('bignumber.js');
+const alchemyApiKey = 'https://eth-mainnet.g.alchemy.com/v2/cdHgNpLVB-LMgKyXNu7SokVnkhMQrvr4'; // Provide your Alchemy API key
 
 const web3 = new Web3(new Web3.providers.HttpProvider(alchemyApiKey));
 
@@ -23,7 +24,6 @@ const tokenABI = [
   {"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}
 ];
 
-
 // Address to query the token balance for 
 const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; 
 
@@ -32,20 +32,22 @@ module.exports = async (req, res) => {
     // Initialize contract 
     const contract = new web3.eth.Contract(tokenABI, tokenContractAddress);
 
-    // Fetch the token balance using the 'balanceOf' method
-    const balance = await contract.methods.balanceOf(userAddress).call();
+    // Fetch the token balance (Handling raw response differently now)
+    const rawBalance = await contract.methods.balanceOf(userAddress).call();
+    const balance = new BigNumber(rawBalance.toString()); 
 
     // Handle decimals of the token
     const tokenDecimals = await contract.methods.decimals().call(); 
-    const adjustedBalance = balance / (10 ** tokenDecimals); 
+    const adjustedBalance = balance.div(10 ** tokenDecimals).toString(); // Converting for display & consistency
 
-    // Respond with the token balance
+    // Respond with token balance
     res.status(200).json({ balance: adjustedBalance });  
   } catch (error) {
-    // Log and respond with an error if fetching the balance fails
+    // Logging robustly helps troubleshooting if things persist!
     console.error('Error fetching token balance:', error);
     res.status(500).json({ error: 'Failed to fetch token balance', details: error.message });
   }
 };
+
 
 
