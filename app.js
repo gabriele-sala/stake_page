@@ -1,6 +1,6 @@
 async function calculateAPR() {
   try {
-    const response = await fetch('/api/calculate-apr');
+    const response = await fetch('/api/calculate-apr');  
     const data = await response.json();
 
     if (data.apr) {
@@ -13,5 +13,5 @@ async function calculateAPR() {
   }
 }
 
-calculateAPR(); // Call on page load
+calculateAPR(); // Call to calculate on page load 
 
