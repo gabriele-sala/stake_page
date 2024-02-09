@@ -1,17 +1,21 @@
 async function calculateAPR() {
   try {
-    const response = await fetch('/api/calculate-apr');  
+    const response = await fetch('/api/calculate-apr'); 
     const data = await response.json();
 
     if (data.apr) {
       document.getElementById('aprResult').textContent = data.apr.toFixed(2);
     } else {
-      console.error('Error fetching APR:', data.error);
+      displayError(data.error || 'Failed to calculate APR'); 
     }
-  } catch (error) {
-    console.error('Error fetching APR:', error);
+  } catch (error) { 
+    displayError('Error fetching APR, please try again later.');
   }
 }
 
-calculateAPR(); // Call to calculate on page load 
+function displayError(message) {
+  document.getElementById('error-message').textContent = message;
+}
+
+calculateAPR(); // Call on page load 
 
