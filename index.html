@@ -1,26 +1,14 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Ethereum APR Calculator</title>
+</head>
 <body>
+  <h1>Enter Ethereum Address:</h1>
+  <input type="text" id="addressInput">
+  <button id="calculateButton">Calculate APR</button>
+  <p>Calculated APR: <span id="aprResult"></span></p>
 
-<input id="address" type="text" />
-<button onclick="lookup()">Lookup</button>
-
-<div id="results"></div>
-
-<script>
-async function lookup() {
-
-  let address = document.getElementById("address").value;
-
-  let res = await fetch('/?address=' + address);
-  let data = await res.json();
-
-  document.getElementById("results").innerHTML = JSON.stringify(data, null, 2);
-
-}
-</script>
-
+  <script src="app.js"></script>
 </body>
 </html>
