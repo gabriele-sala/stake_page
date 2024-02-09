@@ -1,22 +1,36 @@
-async function calculateAPR() {
-  try {
-    const response = await fetch('/api/calculate-apr'); 
-    const data = await response.json();
+document.addEventListener('DOMContentLoaded', function() {
+    calculateAPR(); // Call when the DOM is fully loaded
+});
 
-    if (data.apr) {
-      document.getElementById('aprResult').textContent = data.apr;
-    } else {
-      displayError(data.error || 'Failed to calculate APR'); 
+function calculateAPR() {
+    fetch('/api/calculate-apr') // Makes a request to the serverless function
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayAPR(data.apr); // Display the APR result
+        })
+        .catch(error => {
+            console.error('Failed to fetch APR:', error);
+            displayError('Failed to calculate APR. Please try again later.');
+        });
+}
+
+function displayAPR(apr) {
+    const aprElement = document.getElementById('aprResult');
+    if (aprElement) {
+        aprElement.textContent = `${apr}%`; // Update the text content with the APR
     }
-  } catch (error) { 
-    displayError('Error fetching APR, please try again later.');
-  }
 }
 
 function displayError(message) {
-  document.getElementById('error-message').textContent = message;
+    const errorElement = document.getElementById('error-message');
+    if (errorElement) {
+        errorElement.textContent = message; // Display the error message
+    }
 }
-
-calculateAPR(); // Call on page load
 
 
