@@ -6,7 +6,7 @@ const infuraUrl = `https://mainnet.infura.io/v3/faf348e8e5554ff0a870792631b24807
 const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
 
 // ERC-20 Token Contract details
-const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; // Token contract address
+const tokenContractAddress = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'; // Token contract address
 const tokenABI = [
   // ABI provided for the ERC-20 token contract
   {"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},
@@ -26,7 +26,7 @@ const tokenABI = [
 ];
 
 // Address to query the token balance for
-const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; // Replace with the address you want to check the balance of
+const userAddress = '0xB1C33b391C2569B737eC387E731E88589e8ec148'; // Replace with the address you want to check the balance of
 
 module.exports = async (req, res) => {
     try {
