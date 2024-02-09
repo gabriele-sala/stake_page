@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-const infuraProjectId = 'faf348e8e5554ff0a870792631b24807'; 
+const infuraProjectId = 'faf348e8e5554ff0a870792631b24807'; // Replace with your Infura Project ID
 
 const staticAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; // Replace with the address you want to use
 
@@ -13,13 +13,15 @@ async function calculateAPR() {
 
     const apr = (2500000 / parseFloat(balanceInEther)) / 43 * 365;
 
-    document.getElementById('aprResult').textContent = apr.toFixed(2);
+    // Ensure the DOM element exists before updating
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('aprResult').textContent = apr.toFixed(2); 
+    });
   } catch (error) {
     console.error('Error calculating APR:', error);
   }
 }
 
-// Immediately calculate APR on page load
-calculateAPR(); 
+calculateAPR(); // Initiate the calculation process
 
 
