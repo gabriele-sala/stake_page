@@ -3,40 +3,44 @@ const Web3 = require('web3');
 // Replace 'YOUR_INFURA_PROJECT_ID' with your actual Infura project ID
 const infuraProjectId = 'faf348e8e5554ff0a870792631b24807';
 const infuraUrl = `https://mainnet.infura.io/v3/faf348e8e5554ff0a870792631b24807`;
-
-// Initialize a web3 instance with the Infura URL
 const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
 
-// Ensure 'YOUR_ETHEREUM_ADDRESS' is replaced with the Ethereum address you're interested in
-const staticAddress = '0x76df422F67F58C9e845cB9BFdAb9033776f13F9d';
+// ERC-20 Token Contract details
+const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; // Replace with your token's contract address
+const tokenABI = [
+  // Minimal ABI to get ERC20 Token balance
+  {
+    "constant": true,
+    "inputs": [{"name": "_owner", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "balance", "type": "uint256"}],
+    "type": "function"
+  },
+];
+
+// Address to query the token balance for
+const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; // Replace with the address you want to check the balance of
 
 module.exports = async (req, res) => {
     try {
-        // Fetch the balance of the Ethereum address in Wei
-        const balanceInWei = await web3.eth.getBalance(staticAddress);
-        // Convert the balance from Wei to Ether
-        const balanceInEther = web3.utils.fromWei(balanceInWei, 'ether');
+        // Initialize contract with Web3
+        const contract = new web3.eth.Contract(tokenABI, tokenContractAddress);
 
-        // Prevent division by zero or handling for very small balances
-        if (parseFloat(balanceInEther) === 0) {
-            return res.status(200).json({ apr: "N/A - Zero balance" });
-        }
+        // Fetch the token balance
+        const balance = await contract.methods.balanceOf(userAddress).call();
 
-        // Calculate APR using the provided formula
-        const apr = (2500000 / parseFloat(balanceInEther)) / 43 * 365;
-        
-        // Check for Infinity result from division by a very small number
-        if (!isFinite(apr)) {
-            return res.status(200).json({ apr: "N/A - Balance too low for meaningful APR" });
-        }
+        // Convert balance to a readable format if necessary (depending on the token's decimals)
+        const decimals = 18; // This is common, but check your token's actual decimals
+        const balanceInTokens = balance / Math.pow(10, decimals);
 
-        // Respond with the APR value, formatted to two decimal places
-        res.status(200).json({ apr: `${apr.toFixed(2)}%` });
+        // Respond with the token balance
+        res.status(200).json({ balance: balanceInTokens });
     } catch (error) {
-        // Log the error and respond with a 500 status code and the error message
-        console.error('Error calculating APR:', error);
-        res.status(500).json({ error: 'Failed to calculate APR', details: error.message });
+        // Log and respond with an error if fetching the balance fails
+        console.error('Error fetching token balance:', error);
+        res.status(500).json({ error: 'Failed to fetch token balance', details: error.message });
     }
 };
+
 
 
