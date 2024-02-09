@@ -1,12 +1,10 @@
 const Web3 = require('web3');
+const alchemyApiKey = 'https://eth-mainnet.g.alchemy.com/v2/cdHgNpLVB-LMgKyXNu7SokVnkhMQrvr4'; // Replace with YOUR Alchemy API key
 
-// Replace 'YOUR_INFURA_PROJECT_ID' with your actual Infura project ID
-const infuraProjectId = 'faf348e8e5554ff0a870792631b24807';
-const infuraUrl = `https://mainnet.infura.io/v3/faf348e8e5554ff0a870792631b24807`;
-const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
+const web3 = new Web3(new Web3.providers.HttpProvider(alchemyApiKey));
 
-// ERC-20 Token Contract details
-const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; // Token contract address
+// ERC-20 Token Contract details 
+const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; 
 const tokenABI = [
   // ABI provided for the ERC-20 token contract
   {"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},
@@ -25,18 +23,19 @@ const tokenABI = [
   {"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}
 ];
 
-// Address to query the token balance for
-const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; // Replace with the address you want to check the balance of
+
+// Address to query the token balance for 
+const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; 
 
 module.exports = async (req, res) => {
   try {
-    // Initialize contract with Web3
+    // Initialize contract 
     const contract = new web3.eth.Contract(tokenABI, tokenContractAddress);
 
     // Fetch the token balance using the 'balanceOf' method
     const balance = await contract.methods.balanceOf(userAddress).call();
 
-    // Note: Depending on the token, decimals might need handling 
+    // Handle decimals of the token
     const tokenDecimals = await contract.methods.decimals().call(); 
     const adjustedBalance = balance / (10 ** tokenDecimals); 
 
