@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const Web3 = require('web3');
-const { calculateAPR } = require('./services/calculate-apr'); // Adjust the path as necessary
+const { calculateAPR } = require('./api/calculate-apr'); // Adjust the path as necessary
 const app = express();
 const port = 3000;
 
