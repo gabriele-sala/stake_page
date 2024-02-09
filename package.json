@@ -10,7 +10,7 @@
     "express": "^4.17.1",
     "web3": "^1.8.2",
     "dotenv": "^16.0.0",
-    "bignumber.js": "^9.0.2" // <-- Add this line
+    "bignumber.js": "^9.0.2"
   }
 }
 
