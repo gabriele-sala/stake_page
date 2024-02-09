@@ -3,7 +3,7 @@ const BigNumber = require('bignumber.js');
 
 // Use an actual provider you trust if necessary beyond Public Node - for testing it suffices 
 const mainnetProvider = 'https://rpc.publicnode.com'; 
-const infuraProvider = 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'; // For fallback, use REAL Infura key/url 
+const infuraProvider = 'https://mainnet.infura.io/v3/faf348e8e5554ff0a870792631b24807'; // For fallback, use REAL Infura key/url 
 
 const web3 = new Web3(new Web3.providers.HttpProvider(mainnetProvider)); 
 
