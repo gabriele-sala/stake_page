@@ -1,7 +1,7 @@
 const Web3 = require('web3');
 
 // Replace with your actual Infura Project ID
-const web3 = new Web3('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'); 
+const web3 = new Web3('https://mainnet.infura.io/v3/faf348e8e5554ff0a870792631b24807'); 
 
 async function calculateAPR() {
   const addressInput = document.getElementById('addressInput').value;
