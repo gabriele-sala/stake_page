@@ -6,7 +6,7 @@ const infuraUrl = `https://mainnet.infura.io/v3/faf348e8e5554ff0a870792631b24807
 const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
 
 // ERC-20 Token Contract details
-const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; // Replace with your token's contract address
+const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; // Token contract address
 const tokenABI = [
   // ABI provided for the ERC-20 token contract
   {"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},
@@ -36,18 +36,12 @@ module.exports = async (req, res) => {
         // Fetch the token balance
         const balance = await contract.methods.balanceOf(userAddress).call();
 
-        // Convert balance to a readable format if necessary (depending on the token's decimals)
-        const decimals = 18; // This is common, but check your token's actual decimals
-        const balanceInTokens = balance / Math.pow(10, decimals);
-
         // Respond with the token balance
-        res.status(200).json({ balance: balanceInTokens });
+        res.status(200).json({ balance });
     } catch (error) {
         // Log and respond with an error if fetching the balance fails
         console.error('Error fetching token balance:', error);
         res.status(500).json({ error: 'Failed to fetch token balance', details: error.message });
     }
 };
-
-
 
