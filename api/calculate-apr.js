@@ -1,11 +1,14 @@
 const Web3 = require('web3');
-const BigNumber = require('bignumber.js');
-const alchemyApiKey = 'https://eth-mainnet.g.alchemy.com/v2/cdHgNpLVB-LMgKyXNu7SokVnkhMQrvr4'; // Provide your Alchemy API key
+const BigNumber = require('bignumber.js'); 
 
-const web3 = new Web3(new Web3.providers.HttpProvider(alchemyApiKey));
+// Use an actual provider you trust if necessary beyond Public Node - for testing it suffices 
+const mainnetProvider = 'https://rpc.publicnode.com'; 
+const infuraProvider = 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'; // For fallback, use REAL Infura key/url 
 
-// ERC-20 Token Contract details 
-const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; 
+const web3 = new Web3(new Web3.providers.HttpProvider(mainnetProvider)); 
+
+//  YOUR TOKEN CONTRACT (Paste in ABI)
+const tokenContractAddress = '0x940a2dB1B7008B6C776d4faaCa729d6d4A4AA551'; // REPLACE WITH YOUR CONTRACT ADDRESS!
 const tokenABI = [
   // ABI provided for the ERC-20 token contract
   {"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},
@@ -24,30 +27,35 @@ const tokenABI = [
   {"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}
 ];
 
+
 // Address to query the token balance for 
-const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; 
+const userAddress = '0x4ab6FFa52460979DdE1E442FB95F8BaC56C3AdC3'; // REPLACE WITH THE ADDRESS TO QUERY!
 
 module.exports = async (req, res) => {
   try {
-    // Initialize contract 
     const contract = new web3.eth.Contract(tokenABI, tokenContractAddress);
 
-    // Fetch the token balance (Handling raw response differently now)
     const rawBalance = await contract.methods.balanceOf(userAddress).call();
-    const balance = new BigNumber(rawBalance.toString()); 
-
-    // Handle decimals of the token
+    const balance = new BigNumber(rawBalance.toString());
     const tokenDecimals = await contract.methods.decimals().call(); 
-    const adjustedBalance = balance.div(10 ** tokenDecimals).toString(); // Converting for display & consistency
+    const adjustedBalance = balance.div(10 ** tokenDecimals).toString(); 
 
-    // Respond with token balance
     res.status(200).json({ balance: adjustedBalance });  
   } catch (error) {
-    // Logging robustly helps troubleshooting if things persist!
-    console.error('Error fetching token balance:', error);
-    res.status(500).json({ error: 'Failed to fetch token balance', details: error.message });
-  }
-};
+    // Provider Switching Logic If Error  
+    console.error('Main provider issue:', error);
+
+    //  Infura Fallback Attempt
+    web3.setProvider(infuraProvider); // Fallback 
+    //  Optional - retry your contract calls on new provider...
+
+    res.status(500).json({ error: 'Failed to fetch token balance', details: error
+
+
+
+
+
+
 
 
 
